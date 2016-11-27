@@ -1,5 +1,6 @@
 package se.lovef.linedrawer
 
+import com.sun.javafx.geom.Vec2d
 import javafx.application.Application
 import javafx.scene.Scene
 import javafx.scene.canvas.Canvas
@@ -25,7 +26,10 @@ class Main : Application() {
             this.icons.add(Image("icons/RainbowCenter.circle.128.png"))
 
             val canvas = Canvas(1920.0, 1080.0)
-            canvas.graphicsContext2D.drawStuffs()
+            canvas.graphicsContext2D.draw(Polygon(
+                    center = Vec2d(canvas.width / 2, canvas.height / 2),
+                    radius = Math.min(canvas.width, canvas.height) / 2,
+                    pointsCount = 42))
             this.scene = Scene(Pane().apply {
                 background = Background(BackgroundFill(Color.BLACK, null, null))
                 children.add(canvas)
@@ -33,13 +37,13 @@ class Main : Application() {
         }.show()
     }
 
-    private fun GraphicsContext.drawStuffs() {
-        fill = Color.BLACK
-        stroke = Color.BLUE
+    private fun GraphicsContext.draw(polygon: Polygon) {
+        stroke = Color.GREEN
         lineWidth = 1.0
-        strokeLine(40.0, 10.0, 10.0, 40.0)
-        strokeLine(10.0, 40.0, 80.0, 40.0)
-
-        strokeLine(-10.0, -10.0, 2560.0, 1440.0)
+        polygon.getLevelIterator().forEach { level ->
+            level.forEach {
+                strokeLine(it.start.x, it.start.y, it.end.x, it.end.y)
+            }
+        }
     }
 }
