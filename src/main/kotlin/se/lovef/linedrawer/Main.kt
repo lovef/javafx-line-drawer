@@ -13,7 +13,6 @@ import javafx.scene.paint.Color
 import javafx.stage.Stage
 import se.lovef.math.length
 
-
 /**
  * Date: 2016-02-20
  * @author Love
@@ -61,7 +60,10 @@ class Main : Application() {
             strokeLine(it.start.x, it.start.y, it.end.x, it.end.y)
         }
     }
-}
 
-private val Double.squared: Double
-    get() = this * this
+    companion object {
+        @JvmStatic fun main(vararg args: String) {
+            Application.launch(Main::class.java, *args)
+        }
+    }
+}
