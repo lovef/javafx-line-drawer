@@ -11,6 +11,7 @@ import javafx.scene.layout.BackgroundFill
 import javafx.scene.layout.Pane
 import javafx.scene.paint.Color
 import javafx.stage.Stage
+import se.lovef.math.length
 
 
 /**
@@ -26,10 +27,26 @@ class Main : Application() {
             this.icons.add(Image("icons/RainbowCenter.circle.128.png"))
 
             val canvas = Canvas(1920.0, 1080.0)
-            canvas.graphicsContext2D.draw(Polygon(
+            val graphicsContext = canvas.graphicsContext2D
+
+            val polygonLevelIterator = Polygon(
                     center = Vec2d(canvas.width / 2, canvas.height / 2),
-                    radius = Math.min(canvas.width, canvas.height) / 2,
-                    pointsCount = 42))
+                    radius = Vec2d(canvas.width, canvas.height).length / 2,
+                    pointsCount = 87).getLevelIterator()
+
+            /* Rainbow */
+            arrayListOf(
+                    "#FF0000",
+                    "#FF8000",
+                    "#FFFF00",
+                    "#008000",
+                    "#0000FF",
+                    "#A000C0")
+                    .reversed()
+                    .forEach { color ->
+                graphicsContext.draw(Color.web(color), polygonLevelIterator.next())
+            }
+
             this.scene = Scene(Pane().apply {
                 background = Background(BackgroundFill(Color.BLACK, null, null))
                 children.add(canvas)
@@ -37,13 +54,14 @@ class Main : Application() {
         }.show()
     }
 
-    private fun GraphicsContext.draw(polygon: Polygon) {
-        stroke = Color.GREEN
+    private fun GraphicsContext.draw(color: Color, polygonLevel: Polygon.Level) {
+        stroke = color
         lineWidth = 1.0
-        polygon.getLevelIterator().forEach { level ->
-            level.forEach {
-                strokeLine(it.start.x, it.start.y, it.end.x, it.end.y)
-            }
+        polygonLevel.forEach {
+            strokeLine(it.start.x, it.start.y, it.end.x, it.end.y)
         }
     }
 }
+
+private val Double.squared: Double
+    get() = this * this
