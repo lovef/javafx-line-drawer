@@ -7,13 +7,16 @@ import se.lovef.math.plus
  * Date: 2016-11-27
  * @author Love
  */
-class Polygon(val center: Vec2d, val radius: Double, val pointsCount: Int) {
+class Polygon(val center: Vec2d,
+              val radius: Double,
+              val pointsCount: Int,
+              startAngle: Double = Math.PI / 2) {
 
     val levelCount: Int
         get() = pointsCount / 2
 
     val points: List<Vec2d> = (0..pointsCount - 1).map {
-        val angle = (it * 2 * Math.PI) / pointsCount
+        val angle = (it * 2 * Math.PI) / pointsCount + startAngle
         Vec2d(radius * Math.cos(angle), radius * Math.sin(angle)) + center
     }
 

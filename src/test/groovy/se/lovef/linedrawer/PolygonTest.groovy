@@ -11,7 +11,7 @@ class PolygonTest extends Specification {
 
     def "Levels"() {
         given:
-        def polygon = new Polygon(new Vec2d(), 1, points)
+        def polygon = new Polygon(new Vec2d(), 1, points, 0)
 
         expect:
         polygon.levelCount == levels
@@ -26,7 +26,7 @@ class PolygonTest extends Specification {
 
     def "Iterate level indexes"() {
         given:
-        def polygon = new Polygon(new Vec2d(), 1, points)
+        def polygon = new Polygon(new Vec2d(), 1, points, 0)
 
         expect:
         polygon.getLevel(level).collect { [it.startIndex, it.endIndex] } == levelIndexes
@@ -43,7 +43,7 @@ class PolygonTest extends Specification {
 
     def "Points"() {
         expect:
-        new Polygon(vect(center), 1, pointsCount).points.each { round(it) } == points.collect { vect(it) }
+        new Polygon(vect(center), 1, pointsCount, 0).points.each { round(it) } == points.collect { vect(it) }
 
         where:
         pointsCount | center | points
