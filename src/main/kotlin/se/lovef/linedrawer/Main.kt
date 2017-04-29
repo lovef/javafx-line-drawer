@@ -3,6 +3,8 @@ package se.lovef.linedrawer
 import com.sun.javafx.geom.Vec2d
 import javafx.application.Application
 import javafx.application.Platform
+import javafx.beans.InvalidationListener
+import javafx.beans.property.ReadOnlyDoubleProperty
 import javafx.scene.Scene
 import javafx.scene.canvas.Canvas
 import javafx.scene.canvas.GraphicsContext
@@ -28,38 +30,53 @@ class Main : Application() {
             this.icons.add(Image("icons/RainbowCenter.circle.128.png"))
 
             val canvas = Canvas(1920.0, 1080.0)
-            val graphicsContext = canvas.graphicsContext2D
 
-            val polygonLevelIterator = Polygon(
-                    center = Vec2d(canvas.width / 2, canvas.height / 2),
-                    radius = Vec2d(canvas.width, canvas.height).length / 2,
-                    pointsCount = 87).getLevelIterator()
+            draw(canvas)
 
-            /* Rainbow */
-            arrayListOf(
-                    "#FF0000",
-                    "#FF8000",
-                    "#FFFF00",
-                    "#008000",
-                    "#0000FF",
-                    "#A000C0")
-                    .reversed()
-                    .forEach { color ->
-                        graphicsContext.draw(Color.web(color), polygonLevelIterator.next())
-                    }
-
-            this.scene = Scene(Pane().apply {
+            this.scene = Scene(Pane(canvas).apply {
                 background = Background(BackgroundFill(Color.BLACK, null, null))
-                children.add(canvas)
             }).apply {
+                widthProperty().addListener(InvalidationListener {
+                    canvas.width = (it as ReadOnlyDoubleProperty).value
+                })
+                heightProperty().addListener(InvalidationListener {
+                    canvas.height = (it as ReadOnlyDoubleProperty).value
+                })
                 setOnKeyReleased {
                     when (it.code) {
                         KeyCode.ESCAPE -> Platform.exit()
+                        KeyCode.R -> draw(canvas)
+                        KeyCode.F11 -> {
+                            primaryStage.isFullScreen = !primaryStage.isFullScreen
+                            draw(canvas)
+                        }
                         else -> { }
                     }
                 }
             }
         }.show()
+    }
+
+    private fun draw(canvas: Canvas) {
+        val graphicsContext = canvas.graphicsContext2D
+        graphicsContext.clearRect(0.0, 0.0, canvas.width, canvas.height)
+        val polygonLevelIterator = Polygon(
+                center = Vec2d(canvas.width / 2, canvas.height / 2),
+                radius = Vec2d(canvas.width, canvas.height).length / 2,
+                pointsCount = 87).getLevelIterator()
+
+        /* Rainbow */
+        arrayListOf(
+                "#FF0000",
+                "#FF8000",
+                "#FFFF00",
+                "#008000",
+                "#0000FF",
+                "#A000C0")
+                .reversed()
+                .forEach { color ->
+                    graphicsContext.draw(Color.web(color), polygonLevelIterator.next())
+                }
     }
 
     private fun GraphicsContext.draw(color: Color, polygonLevel: Polygon.Level) {
