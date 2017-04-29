@@ -1,0 +1,15 @@
+apply plugin: 'java'
+apply plugin: 'kotlin'
+apply plugin: "groovy"
+
+sourceCompatibility = JavaVersion.VERSION_1_7
+targetCompatibility = JavaVersion.VERSION_1_7
+
+dependencies {
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+
+    testCompile project(':assertUtil')
+    testCompile "org.codehaus.groovy:groovy-all:2.4.1"
+    testCompile "org.spockframework:spock-core:1.1-groovy-2.4-rc-3"
+    testCompile 'cglib:cglib-nodep:2.2' // For mocking classes
+}
