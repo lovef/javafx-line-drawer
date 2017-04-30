@@ -1,13 +1,12 @@
 package se.lovef.linedrawer
 
-import com.sun.javafx.geom.Vec2d
-import se.lovef.math.plus
+import se.lovef.util.Vector2d
 
 /**
  * Date: 2016-11-27
  * @author Love
  */
-class Polygon(val center: Vec2d,
+class Polygon(val center: Vector2d,
               val radius: Double,
               val pointsCount: Int,
               startAngle: Double = Math.PI / 2) {
@@ -15,9 +14,9 @@ class Polygon(val center: Vec2d,
     val levelCount: Int
         get() = pointsCount / 2
 
-    val points: List<Vec2d> = (0..pointsCount - 1).map {
+    val points: List<Vector2d> = (0..pointsCount - 1).map {
         val angle = (it * 2 * Math.PI) / pointsCount + startAngle
-        Vec2d(radius * Math.cos(angle), radius * Math.sin(angle)) + center
+        Vector2d(radius * Math.cos(angle), radius * Math.sin(angle)) + center
     }
 
     fun getLevelIterator(start: Int = 0, end: Int = levelCount -1) = LevelIterator(start, end)
@@ -58,9 +57,9 @@ class Polygon(val center: Vec2d,
         val startIndex = startIndex % pointsCount
         val endIndex = endIndex % pointsCount
 
-        val start: Vec2d
+        val start: Vector2d
             get() = points[this.startIndex]
-        val end: Vec2d
+        val end: Vector2d
             get() = points[this.endIndex]
     }
 }

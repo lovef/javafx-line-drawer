@@ -1,6 +1,6 @@
 package se.lovef.linedrawer
 
-import com.sun.javafx.geom.Vec2d
+import se.lovef.util.Vector2d
 import spock.lang.Specification
 
 /**
@@ -11,7 +11,7 @@ class PolygonTest extends Specification {
 
     def "Levels"() {
         given:
-        def polygon = new Polygon(new Vec2d(), 1, points, 0)
+        def polygon = new Polygon(Vector2d.ZERO, 1, points, 0)
 
         expect:
         polygon.levelCount == levels
@@ -26,7 +26,7 @@ class PolygonTest extends Specification {
 
     def "Iterate level indexes"() {
         given:
-        def polygon = new Polygon(new Vec2d(), 1, points, 0)
+        def polygon = new Polygon(Vector2d.ZERO, 1, points, 0)
 
         expect:
         polygon.getLevel(level).collect { [it.startIndex, it.endIndex] } == levelIndexes
@@ -43,7 +43,7 @@ class PolygonTest extends Specification {
 
     def "Points"() {
         expect:
-        new Polygon(vect(center), 1, pointsCount, 0).points.each { round(it) } == points.collect { vect(it) }
+        new Polygon(vect(center), 1, pointsCount, 0).points.collect { round(it) } == points.collect { vect(it) }
 
         where:
         pointsCount | center | points
@@ -52,12 +52,13 @@ class PolygonTest extends Specification {
         4           | [0, 1] | [[1, 1], [0, 2], [-1, 1], [0, 0]]
     }
 
-    Vec2d vect(List<Double> list) {
-        return new Vec2d(list.first(), list.last())
+    Vector2d vect(List<Double> list) {
+        return new Vector2d(list.first(), list.last())
     }
 
-    void round(Vec2d v) {
-        v.x = Math.round(v.x * 1e10) * 1e-10
-        v.y = Math.round(v.y * 1e10) * 1e-10
+    def round(Vector2d v) {
+        new Vector2d(
+                Math.round(v.x * 1e10) * 1e-10,
+                Math.round(v.y * 1e10) * 1e-10)
     }
 }

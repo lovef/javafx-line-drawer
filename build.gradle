@@ -33,6 +33,7 @@ allprojects {
 }
 
 dependencies {
+    compile project("data")
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     compile 'no.tornado:tornadofx:1.6.+'
 

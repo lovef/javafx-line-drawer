@@ -1,6 +1,5 @@
 package se.lovef.linedrawer
 
-import com.sun.javafx.geom.Vec2d
 import javafx.application.Application
 import javafx.application.Platform
 import javafx.beans.InvalidationListener
@@ -15,7 +14,7 @@ import javafx.scene.layout.BackgroundFill
 import javafx.scene.layout.Pane
 import javafx.scene.paint.Color
 import javafx.stage.Stage
-import se.lovef.math.length
+import se.lovef.util.Vector2d
 
 /**
  * Date: 2016-02-20
@@ -61,8 +60,8 @@ class Main : Application() {
         val graphicsContext = canvas.graphicsContext2D
         graphicsContext.clearRect(0.0, 0.0, canvas.width, canvas.height)
         val polygonLevelIterator = Polygon(
-                center = Vec2d(canvas.width / 2, canvas.height / 2),
-                radius = Vec2d(canvas.width, canvas.height).length / 2,
+                center = Vector2d(canvas.width / 2, canvas.height / 2),
+                radius = Vector2d(canvas.width, canvas.height).length / 2,
                 pointsCount = 87).getLevelIterator()
 
         /* Rainbow */
