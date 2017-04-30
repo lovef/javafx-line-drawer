@@ -14,6 +14,7 @@ import javafx.scene.layout.BackgroundFill
 import javafx.scene.layout.Pane
 import javafx.scene.paint.Color
 import javafx.stage.Stage
+import se.lovef.log.log
 import se.lovef.util.Vector2d
 
 /**
@@ -23,6 +24,7 @@ import se.lovef.util.Vector2d
 class Main : Application() {
 
     override fun start(primaryStage: Stage) {
+        log("Params: " + parameters.raw)
         primaryStage.apply {
             this.title = "LineDrawer"
 

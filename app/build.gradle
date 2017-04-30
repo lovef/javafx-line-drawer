@@ -14,3 +14,10 @@ dependencies {
 
     testCompile 'se.lovef.test:test:1.0.8'
 }
+
+run {
+    if (project.hasProperty("runargs")) {
+        println("Args: " + runargs)
+        args runargs.split(',')
+    }
+}
