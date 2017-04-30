@@ -4,20 +4,22 @@ import javafx.application.Application
 import javafx.application.Platform
 import javafx.beans.InvalidationListener
 import javafx.beans.property.ReadOnlyDoubleProperty
+import javafx.scene.Cursor
 import javafx.scene.Scene
 import javafx.scene.canvas.Canvas
 import javafx.scene.canvas.GraphicsContext
-import javafx.scene.control.Label
 import javafx.scene.image.Image
 import javafx.scene.input.KeyCode
 import javafx.scene.layout.Background
 import javafx.scene.layout.BackgroundFill
-import javafx.scene.layout.HBox
 import javafx.scene.layout.Pane
 import javafx.scene.paint.Color
+import javafx.stage.Screen
 import javafx.stage.Stage
+import javafx.stage.StageStyle
 import se.lovef.log.log
 import se.lovef.util.Vector2d
+import se.lovef.util.squared
 import tornadofx.hbox
 import tornadofx.label
 
@@ -31,6 +33,7 @@ class Main : Application() {
         log("Params: " + parameters.raw)
         when (parameters.raw?.firstOrNull()) {
             "/c" -> configStart(stage)
+            "/s" -> screenSaverStart(stage)
             else -> normalStart(stage)
         }
     }
@@ -40,11 +43,12 @@ class Main : Application() {
             scene = Scene(hbox { label("TODO: Config") }).apply {
                 setOnKeyReleased { if (it.code == KeyCode.ESCAPE) Platform.exit() }
             }
-        }.show()
+            show()
+        }
     }
 
-    private fun normalStart(primaryStage: Stage) {
-        primaryStage.apply {
+    private fun normalStart(stage: Stage) {
+        stage.apply {
             this.title = "LineDrawer"
 
             this.icons.add(Image("icons/RainbowCenter.circle.128.png"))
@@ -67,15 +71,67 @@ class Main : Application() {
                         KeyCode.ESCAPE -> Platform.exit()
                         KeyCode.R -> draw(canvas)
                         KeyCode.F11 -> {
-                            primaryStage.isFullScreen = !primaryStage.isFullScreen
+                            stage.isFullScreen = !stage.isFullScreen
                             draw(canvas)
                         }
-                        else -> {
-                        }
+                        else -> { }
                     }
                 }
             }
-        }.show()
+            show()
+        }
+    }
+
+    private fun screenSaverStart(stage: Stage) {
+        stage.apply {
+            initStyle(StageStyle.UNDECORATED)
+            isResizable = false
+            isIconified = false
+
+            val screenBounds = Screen.getScreens().map { it.bounds }
+                    .sortedWith(compareBy({ it.minX }, { it.minY }))
+            x = screenBounds.map { it.minX }.reduce { a, b -> minOf(a, b) }
+            y = screenBounds.map { it.minY }.reduce { a, b -> minOf(a, b)}
+            width = screenBounds.map { it.maxX }.reduce { a, b -> maxOf(a, b) } - x
+            height = screenBounds.map { it.maxY }.reduce { a, b -> maxOf(a, b) } - y
+
+            val pane = Pane()
+            scene = Scene(pane).apply {
+                fill = Color.BLACK
+                cursor = Cursor.NONE
+                setOnKeyReleased {
+                    when (it.code) {
+                        KeyCode.ESCAPE -> Platform.exit()
+                        else -> { }
+                    }
+                }
+                var moveStart = 0L
+                var origin = Vector2d.ZERO
+                setOnMouseMoved {
+                    val time = System.currentTimeMillis() - moveStart
+                    val position = Vector2d(it.x, it.y)
+                    if (time > 300) {
+                        moveStart = System.currentTimeMillis()
+                        origin = position
+                    } else if ((position - origin).lengthSquared > 300.squared) {
+                        Platform.exit()
+                    }
+                }
+                setOnMouseClicked { Platform.exit() }
+            }
+            screenBounds.map { bound ->
+                val canvas = Canvas().apply {
+                    layoutX = bound.minX
+                    layoutY = bound.minY
+                    width = bound.width
+                    height = bound.height
+                }
+
+                draw(canvas)
+                pane.children.add(canvas)
+            }
+            show()
+        }
     }
 
     private fun draw(canvas: Canvas) {
