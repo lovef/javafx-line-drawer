@@ -7,15 +7,19 @@ import javafx.beans.property.ReadOnlyDoubleProperty
 import javafx.scene.Scene
 import javafx.scene.canvas.Canvas
 import javafx.scene.canvas.GraphicsContext
+import javafx.scene.control.Label
 import javafx.scene.image.Image
 import javafx.scene.input.KeyCode
 import javafx.scene.layout.Background
 import javafx.scene.layout.BackgroundFill
+import javafx.scene.layout.HBox
 import javafx.scene.layout.Pane
 import javafx.scene.paint.Color
 import javafx.stage.Stage
 import se.lovef.log.log
 import se.lovef.util.Vector2d
+import tornadofx.hbox
+import tornadofx.label
 
 /**
  * Date: 2016-02-20
@@ -23,8 +27,23 @@ import se.lovef.util.Vector2d
  */
 class Main : Application() {
 
-    override fun start(primaryStage: Stage) {
+    override fun start(stage: Stage) {
         log("Params: " + parameters.raw)
+        when (parameters.raw?.firstOrNull()) {
+            "/c" -> configStart(stage)
+            else -> normalStart(stage)
+        }
+    }
+
+    private fun configStart(stage: Stage) {
+        stage.apply {
+            scene = Scene(hbox { label("TODO: Config") }).apply {
+                setOnKeyReleased { if (it.code == KeyCode.ESCAPE) Platform.exit() }
+            }
+        }.show()
+    }
+
+    private fun normalStart(primaryStage: Stage) {
         primaryStage.apply {
             this.title = "LineDrawer"
 
@@ -51,7 +70,8 @@ class Main : Application() {
                             primaryStage.isFullScreen = !primaryStage.isFullScreen
                             draw(canvas)
                         }
-                        else -> { }
+                        else -> {
+                        }
                     }
                 }
             }
