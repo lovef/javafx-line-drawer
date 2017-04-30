@@ -13,43 +13,57 @@ class DebugTimerTest {
 
     @Test fun `simple time measurement`() {
         DebugTimer().apply {
+            var start = currentMillis
             Thread.sleep(5)
-            5L isLessOrEqualTo time isLessOrEqualTo 6L
+            var period = currentMillis - start
+            period isLessOrEqualTo time isLessOrEqualTo period + 1
+
             Thread.sleep(5)
-            10L isLessOrEqualTo time isLessOrEqualTo 12L
+            period = currentMillis - start
+            period isLessOrEqualTo time isLessOrEqualTo period + 1
+
             start()
+            start = currentMillis
             Thread.sleep(5)
-            5L isLessOrEqualTo time isLessOrEqualTo 6L
+            period = currentMillis - start
+            period isLessOrEqualTo time isLessOrEqualTo period + 1
+
             Thread.sleep(5)
-            10L isLessOrEqualTo time isLessOrEqualTo 12L
+            period = currentMillis - start
+            period isLessOrEqualTo time isLessOrEqualTo period + 1
         }
     }
 
     @Test fun `named intervals`() {
         DebugTimer().apply {
             start("first")
+            val firstStart = currentMillis
             Thread.sleep(3)
             switchTo("second")
+            val secondStart = currentMillis
             Thread.sleep(5)
             stop()
+            val stop = currentMillis
             Thread.sleep(5)
-            3L isLessOrEqualTo time("first") isLessOrEqualTo 4L
-            5L isLessOrEqualTo time("second") isLessOrEqualTo 6L
-            8L isLessOrEqualTo time isLessOrEqualTo 10L
+            secondStart - firstStart isCloseTo time("first") tolerance 1
+            stop - secondStart isCloseTo time("second") tolerance 1
+            stop - firstStart isCloseTo time tolerance 1
         }
     }
 
     @Test fun `mean time`() {
         DebugTimer().apply {
             meanTime isEqualTo 0f
-            (0..2).forEach {
+            var control = 0.0
+            (0 until 5).forEach {
                 start()
-                Thread.sleep(1)
+                val start = currentMillis
+                Thread.sleep(3)
+                control = (currentMillis - start + control) / 2
                 stop()
-                Thread.sleep(2)
+                Thread.sleep(3)
             }
-            meanTime isCloseTo 1 tolerance 0.5
-            start()
+            meanTime isCloseTo control tolerance 0.2
         }
     }
 
@@ -58,17 +72,22 @@ class DebugTimerTest {
         DebugTimer().apply {
             meanTime("first") isEqualTo 0f
             meanTime("second") isEqualTo 0f
-            (0..2).forEach {
+            var firstControl = 0.0
+            var secondControl = 0.0
+            (0 until 5).forEach {
                 start("first")
+                val firstStart = currentMillis
                 Thread.sleep(1)
+                firstControl = (currentMillis - firstStart + firstControl) / 2
                 switchTo("second")
+                val secondStart = currentMillis
                 Thread.sleep(2)
+                secondControl = (currentMillis - secondStart + secondControl) / 2
                 stop()
                 Thread.sleep(3)
             }
-            meanTime("first") isCloseTo 1 tolerance 0.5
-            meanTime("second") isCloseTo 2 tolerance 0.5
-            meanTime isCloseTo 3 tolerance 0.5
+            meanTime("first") isCloseTo firstControl tolerance 0.2
+            meanTime("second") isCloseTo secondControl tolerance 0.2
         }
     }
 
@@ -89,4 +108,6 @@ class DebugTimerTest {
             count isEqualTo 2
         }
     }
+
+    val currentMillis get() = System.currentTimeMillis()
 }
