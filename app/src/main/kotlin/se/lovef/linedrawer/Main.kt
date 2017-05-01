@@ -36,6 +36,7 @@ class Main : Application() {
             startParam == "" -> normalStart(stage)
             startParam.startsWith("/c", ignoreCase = true) -> configStart(stage)
             startParam.startsWith("/s", ignoreCase = true) -> screenSaverStart(stage)
+            startParam.startsWith("/p", ignoreCase = true) -> Platform.exit() // Cannot display preview
             else -> stage.apply {
                 scene = Scene(hbox { label("Unhandled params: " + parameters.raw) })
                         .apply { setOnKeyReleased { if(it.code == KeyCode.ESCAPE) Platform.exit() } }
