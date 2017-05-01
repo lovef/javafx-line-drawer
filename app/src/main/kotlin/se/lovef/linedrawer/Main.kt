@@ -33,9 +33,14 @@ class Main : Application() {
         log("Params: " + parameters.raw)
         val startParam = parameters.raw?.firstOrNull() ?: ""
         when {
+            startParam == "" -> normalStart(stage)
             startParam.startsWith("/c", ignoreCase = true) -> configStart(stage)
             startParam.startsWith("/s", ignoreCase = true) -> screenSaverStart(stage)
-            else -> normalStart(stage)
+            else -> stage.apply {
+                scene = Scene(hbox { label("Unhandled params: " + parameters.raw) })
+                        .apply { setOnKeyReleased { if(it.code == KeyCode.ESCAPE) Platform.exit() } }
+                show()
+            }
         }
     }
 
