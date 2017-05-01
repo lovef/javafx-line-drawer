@@ -31,9 +31,10 @@ class Main : Application() {
 
     override fun start(stage: Stage) {
         log("Params: " + parameters.raw)
-        when (parameters.raw?.firstOrNull()) {
-            "/c" -> configStart(stage)
-            "/s" -> screenSaverStart(stage)
+        val startParam = parameters.raw?.firstOrNull() ?: ""
+        when {
+            startParam.startsWith("/c", ignoreCase = true) -> configStart(stage)
+            startParam.startsWith("/s", ignoreCase = true) -> screenSaverStart(stage)
             else -> normalStart(stage)
         }
     }

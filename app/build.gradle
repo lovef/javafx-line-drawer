@@ -15,9 +15,28 @@ dependencies {
     testCompile 'se.lovef.test:test:1.0.8'
 }
 
+apply plugin: 'javafx-gradle-plugin'
+
 run {
     if (project.hasProperty("runargs")) {
         println("Args: " + runargs)
         args runargs.split(',')
     }
+}
+
+archivesBaseName = "Line-drawer"
+
+jfx {
+    appName = archivesBaseName
+    mainClass = mainClassName
+
+    // minimal requirement for jfxNative-task
+    vendor = 'lovef'
+}
+
+task buildScreenSaver(type: Copy, dependsOn: 'jfxNative') {
+    from "build/jfx/native/${archivesBaseName}/"
+    into "build/jfx/native/${archivesBaseName}/"
+    include "${archivesBaseName}.exe"
+    rename "${archivesBaseName}.exe", "${archivesBaseName}.scr"
 }
