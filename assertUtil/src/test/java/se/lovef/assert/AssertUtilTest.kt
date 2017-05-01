@@ -87,16 +87,28 @@ class AssertUtilTest {
     }
 
     @Test fun `is null`() {
-        null.isNull();
+        null.isNull()
+        null.isNull() referenceIsEqualTo null
         { OBJECT_A.isNull() } throws Error::class
-        (null.isNull()) referenceIsEqualTo null
     }
 
     @Test fun `is not null`() {
-        OBJECT_A.isNotNull();
+        OBJECT_A.isNotNull()
+        OBJECT_A.isNotNull() referenceIsEqualTo OBJECT_A
         { null.isNotNull() } throws Error::class
-        (OBJECT_A.isNotNull()) referenceIsEqualTo OBJECT_A
         "123".isNotNull().length isEqualTo 3
+    }
+
+    @Test fun `is true`() {
+        true.isTrue()
+        true.isTrue() referenceIsEqualTo true
+        { false.isTrue() } throws Error::class
+    }
+
+    @Test fun `is false`() {
+        false.isFalse()
+        false.isFalse() referenceIsEqualTo false
+        { true.isFalse() } throws Error::class
     }
 
     @Test fun `is less than`() {
