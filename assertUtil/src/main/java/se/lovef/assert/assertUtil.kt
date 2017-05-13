@@ -52,6 +52,14 @@ infix fun <T : Any> T?.isNotEqualTo(other: T?): T? {
     return other
 }
 
+infix fun CharSequence?.doesContain(other: CharSequence) = isNotNull().apply {
+    assertThat("'$this' does contain '$other'", this.contains(other))
+}
+
+infix fun CharSequence?.doesNotContain(other: CharSequence) = apply {
+    assertThat("'$this' does not contain '$other'", this == null || !this.contains(other))
+}
+
 fun <T : Any> T?.isNull() = apply { this isEqualTo null }
 
 fun <T : Any> T?.isNotNull() = apply { this isNotEqualTo null }!!

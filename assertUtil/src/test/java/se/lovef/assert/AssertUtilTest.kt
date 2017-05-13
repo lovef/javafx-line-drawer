@@ -90,6 +90,23 @@ class AssertUtilTest {
         { null isNotEqualTo null } throws Error::class
     }
 
+    @Test fun `does contain`() {
+        "my awesome string" as CharSequence doesContain "awesome" as CharSequence referenceIsEqualTo "my awesome string"
+        { "my awesome string" doesContain "shit" } throws Error::class
+        { "my awesome string" doesContain "we.+me" } throws Error::class
+
+        "my awesome string" doesContain "my" doesContain "awesome" doesContain "string"
+
+        { null doesContain "shit" } throws Error::class
+    }
+
+    @Test fun `does not contain`() {
+        "my awesome string" as CharSequence doesNotContain "shit" as CharSequence referenceIsEqualTo "my awesome string"
+        { "my awesome string" doesNotContain "awesome" } throws Error::class
+
+        null doesNotContain "awesome"
+    }
+
     @Test fun `is null`() {
         null.isNull()
         null.isNull() referenceIsEqualTo null
