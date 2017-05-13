@@ -128,6 +128,34 @@ class AssertUtilTest {
         null doesNotMatch "shit".toRegex()
     }
 
+    @Test fun `does start with`() {
+        "my awesome string" as CharSequence doesStartWith "my" as CharSequence referenceIsEqualTo "my awesome string"
+        { "my awesome string" doesStartWith "awesome" } throws Error::class
+
+        { null doesStartWith "shit" } throws Error::class
+    }
+
+    @Test fun `does not start with`() {
+        "my awesome string" as CharSequence doesNotStartWith "awesome" as CharSequence referenceIsEqualTo "my awesome string"
+        { "my awesome string" doesNotStartWith "my" } throws Error::class
+
+        null doesNotStartWith "shit"
+    }
+
+    @Test fun `does end with`() {
+        "my awesome string" as CharSequence doesEndWith "string" as CharSequence referenceIsEqualTo "my awesome string"
+        { "my awesome string" doesEndWith "awesome" } throws Error::class
+
+        { null doesEndWith "shit" } throws Error::class
+    }
+
+    @Test fun `does not end with`() {
+        "my awesome string" as CharSequence doesNotEndWith "awesome" as CharSequence referenceIsEqualTo "my awesome string"
+        { "my awesome string" doesNotEndWith "string" } throws Error::class
+
+        null doesNotEndWith "shit"
+    }
+
     @Test fun `is null`() {
         null.isNull()
         null.isNull() referenceIsEqualTo null

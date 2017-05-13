@@ -77,6 +77,22 @@ infix fun CharSequence?.doesNotMatch(@Language("RegExp") regex: Regex) = apply {
     assertThat("'$this' does not match '$regex'", this == null || !this.contains(regex))
 }
 
+infix fun CharSequence?.doesStartWith(start: CharSequence)  = isNotNull().apply {
+    assertThat("'$this' does start with '$start'", this.startsWith(start))
+}
+
+infix fun CharSequence?.doesNotStartWith(start: CharSequence)  = apply {
+    assertThat("'$this' does not start with '$start'", this == null || !this.startsWith(start))
+}
+
+infix fun CharSequence?.doesEndWith(end: CharSequence)  = isNotNull().apply {
+    assertThat("'$this' does end with '$end'", this.endsWith(end))
+}
+
+infix fun CharSequence?.doesNotEndWith(end: CharSequence)  = apply {
+    assertThat("'$this' does not end with '$end'", this == null || !this.endsWith(end))
+}
+
 fun <T : Any> T?.isNull() = apply { this isEqualTo null }
 
 fun <T : Any> T?.isNotNull() = apply { this isNotEqualTo null }!!
