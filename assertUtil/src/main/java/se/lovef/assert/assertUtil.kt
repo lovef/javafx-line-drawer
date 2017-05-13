@@ -143,4 +143,10 @@ class Difference<out T : Number, out R : Number>(val a: T, val b: R) {
     }
 }
 
-infix fun String.proof(proof: () -> Unit) = proof()
+infix fun String.proof(proof: () -> Unit) {
+    try {
+        proof()
+    } catch (throwable: Throwable) {
+        throw AssertionError(this, throwable)
+    }
+}

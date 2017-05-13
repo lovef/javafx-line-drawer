@@ -241,13 +241,13 @@ class AssertUtilTest {
             "Test description" proof {
                 1 isEqualTo 2
             }
-        } throws Error::class
+        }.throws(Error::class).message isEqualTo "Test description"
         {
             "Test description" proof {
                 1 isEqualTo 1
                 1 isEqualTo 2
             }
-        } throws Error::class
+        }.throws(Error::class).message isEqualTo "Test description"
     }
 
     @Test fun `proof in a expression body`() = "A proof can be done in a expression body" proof {
