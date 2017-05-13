@@ -21,15 +21,19 @@ class AssertUtilTest {
         }
     }
 
+    class SpecialException(val specialValue: String = "special value"): Exception()
+
     @Test fun `throws`() {
-        { throw Exception() } throws Exception::class
-        { throw Exception() } throws Throwable::class
+        val exception = SpecialException();
+        { throw exception } throws SpecialException::class referenceIsEqualTo exception
+        { throw exception }.throws(SpecialException::class).specialValue isEqualTo exception.specialValue
+        { throw exception } throws Throwable::class
 
         { { } throws Error::class } throws NotThrownError::class
 
         { { 1 } throws Error::class } throws NotThrownError::class
 
-        { { throw Exception() } throws Error::class } throws NotThrownError::class
+        { { throw exception } throws Error::class } throws NotThrownError::class
         { { throw Error() } throws Exception::class } throws NotThrownError::class
     }
 

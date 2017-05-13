@@ -4,7 +4,6 @@ import junit.framework.AssertionFailedError
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.core.IsInstanceOf
 import org.junit.Assert.assertTrue
-import java.lang.Error
 import kotlin.reflect.KClass
 
 /*
@@ -12,11 +11,11 @@ import kotlin.reflect.KClass
  * @author Love
  */
 
-infix fun <T : Throwable> (() -> Any?).throws(throwableType: KClass<T>) {
-    var thrown: Throwable? = null
+infix fun <T : Throwable> (() -> Any?).throws(throwableType: KClass<T>): T {
+    var thrown: T? = null
     try {
         invoke()
-    } catch (t: Throwable) {
+    } catch (t: T) {
         thrown = t
     }
     if (thrown == null) {
@@ -24,6 +23,7 @@ infix fun <T : Throwable> (() -> Any?).throws(throwableType: KClass<T>) {
     }
     try {
         thrown typeIs throwableType
+        return thrown
     } catch (error: Error) {
         throw NotThrownError("Expected ${throwableType.java.simpleName} to be thrown " +
                 "but caught ${thrown.javaClass.simpleName}")
