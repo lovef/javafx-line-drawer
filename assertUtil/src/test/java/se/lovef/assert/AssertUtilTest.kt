@@ -39,13 +39,8 @@ class AssertUtilTest {
 
     @Test fun `type is`() {
         this typeIs AssertUtilTest::class
-        this instanceOf AssertUtilTest::class
-
         this typeIs Any::class
-        this instanceOf Any::class
-
         {this typeIs Int::class } throws Error::class
-        {this instanceOf Int::class } throws Error::class
     }
 
     val OBJECT_A = Date(0)

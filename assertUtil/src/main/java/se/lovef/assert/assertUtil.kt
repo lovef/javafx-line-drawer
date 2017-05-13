@@ -35,8 +35,6 @@ infix fun <T : Any, R : Any> T?.typeIs(type: KClass<R>) = apply {
     assertThat("$this type is ${type.java.simpleName}", this, IsInstanceOf(type.java))
 }
 
-infix fun <T : Any, R : Any> T?.instanceOf(type: KClass<R>) = this typeIs type
-
 class NotThrownError(message: String) : AssertionFailedError(message)
 
 infix fun <T : Any?> T.isEqualTo(other: T): T {
