@@ -3,6 +3,7 @@ package se.lovef.assert
 import junit.framework.AssertionFailedError
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.core.IsInstanceOf
+import org.intellij.lang.annotations.Language
 import org.junit.Assert.assertTrue
 import kotlin.reflect.KClass
 
@@ -58,6 +59,22 @@ infix fun CharSequence?.doesContain(other: CharSequence) = isNotNull().apply {
 
 infix fun CharSequence?.doesNotContain(other: CharSequence) = apply {
     assertThat("'$this' does not contain '$other'", this == null || !this.contains(other))
+}
+
+infix fun CharSequence?.doesMatch(@Language("RegExp") regex: CharSequence) = isNotNull().apply {
+    assertThat("'$this' does match '$regex'", this.toString().contains(regex.toString().toRegex()))
+}
+
+infix fun CharSequence?.doesMatch(regex: Regex) = isNotNull().apply {
+    assertThat("'$this' does match '$regex'", this.toString().contains(regex))
+}
+
+infix fun CharSequence?.doesNotMatch(@Language("RegExp") regex: CharSequence) = apply {
+    assertThat("'$this' does not match '$regex'", this == null || !this.contains(regex.toString().toRegex()))
+}
+
+infix fun CharSequence?.doesNotMatch(@Language("RegExp") regex: Regex) = apply {
+    assertThat("'$this' does not match '$regex'", this == null || !this.contains(regex))
 }
 
 fun <T : Any> T?.isNull() = apply { this isEqualTo null }

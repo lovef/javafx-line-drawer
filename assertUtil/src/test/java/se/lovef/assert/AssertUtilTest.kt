@@ -107,6 +107,27 @@ class AssertUtilTest {
         null doesNotContain "awesome"
     }
 
+    @Test fun `does match`() {
+        "my awesome string" as CharSequence doesMatch "we.+me" as CharSequence referenceIsEqualTo "my awesome string"
+        "my awesome string" as CharSequence doesMatch "we.+me".toRegex() referenceIsEqualTo "my awesome string"
+        { "my awesome string" doesMatch "shit" } throws Error::class
+
+        "my awesome string" doesMatch "^my" doesMatch "we.+me" doesMatch "string$"
+        "my awesome string" doesMatch "^my".toRegex() doesMatch "we.+me".toRegex() doesMatch "string$".toRegex();
+
+        { null doesMatch "shit" } throws Error::class
+    }
+
+    @Test fun `does not match`() {
+        "my awesome string" as CharSequence doesNotMatch "shit" as CharSequence referenceIsEqualTo "my awesome string"
+        "my awesome string" as CharSequence doesNotMatch "shit".toRegex() referenceIsEqualTo "my awesome string"
+        { "my awesome string" doesNotMatch "we.+me" } throws Error::class
+        { "my awesome string" doesNotMatch "we.+me".toRegex() } throws Error::class
+
+        null doesNotMatch "shit"
+        null doesNotMatch "shit".toRegex()
+    }
+
     @Test fun `is null`() {
         null.isNull()
         null.isNull() referenceIsEqualTo null
