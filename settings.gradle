@@ -1,3 +1,2 @@
 include ':app',
-        ':data',
-        ':assertUtil'
+        ':data'
