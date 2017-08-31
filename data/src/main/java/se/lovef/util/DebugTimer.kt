@@ -1,5 +1,7 @@
 package se.lovef.util
 
+import java.util.*
+
 private val currentTimeMillis get() = System.currentTimeMillis()
 
 /**
