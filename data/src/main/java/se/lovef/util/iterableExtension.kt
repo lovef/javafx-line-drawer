@@ -1,5 +1,7 @@
 package se.lovef.util
 
+import java.util.*
+
 /*
  * Date: 2017-04-12
  * @author Love
