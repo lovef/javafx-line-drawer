@@ -17,11 +17,22 @@ dependencies {
 
 apply plugin: 'javafx-gradle-plugin'
 
+//noinspection GroovyAssignabilityCheck
 run {
     if (project.hasProperty("runargs")) {
-        println("Args: " + runargs)
-        args runargs.split(',')
+        def arguments = project["runargs"]
+        println("Args: " + arguments)
+        //noinspection GroovyAssignabilityCheck
+        args arguments.split(',')
     }
+}
+
+//noinspection GroovyAssignabilityCheck
+task screenSaver(dependsOn: 'classes', type: JavaExec, group: 'application', description: 'Run screen saver') {
+    classpath = sourceSets.main.runtimeClasspath
+    main mainClassName
+    //noinspection GroovyAssignabilityCheck
+    args '/s'
 }
 
 archivesBaseName = "Line-drawer"
@@ -34,6 +45,7 @@ jfx {
     vendor = 'lovef'
 }
 
+//noinspection GroovyAssignabilityCheck
 task buildScreenSaver(type: Copy, dependsOn: 'jfxNative') {
     from "build/jfx/native/${archivesBaseName}/"
     into "build/jfx/native/${archivesBaseName}/"
