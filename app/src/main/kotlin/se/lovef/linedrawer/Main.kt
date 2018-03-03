@@ -31,9 +31,9 @@ class Main : Application() {
 
     override fun start(stage: Stage) {
         log("Params: " + parameters.raw)
-        val startParam = parameters.raw?.firstOrNull() ?: ""
+        val startParam = parameters.raw?.firstOrNull()
         when {
-            startParam == "" -> normalStart(stage)
+            startParam == null -> normalStart(stage)
             startParam.startsWith("/c", ignoreCase = true) -> configStart(stage)
             startParam.startsWith("/s", ignoreCase = true) -> screenSaverStart(stage)
             startParam.startsWith("/p", ignoreCase = true) -> Platform.exit() // Cannot display preview
@@ -128,8 +128,8 @@ class Main : Application() {
             }
             screenBounds.map { bound ->
                 val canvas = Canvas().apply {
-                    layoutX = bound.minX
-                    layoutY = bound.minY
+                    layoutX = bound.minX - x
+                    layoutY = bound.minY - y
                     width = bound.width
                     height = bound.height
                 }
